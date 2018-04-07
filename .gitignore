@@ -5,5 +5,5 @@ gradle/
 gradlew
 gradlew.bat
 out/
-cloud.iml
+core.iml
 src/test/**

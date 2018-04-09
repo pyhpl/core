@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: core
+  redis:
+    host: localhost
+    password: sc_admin

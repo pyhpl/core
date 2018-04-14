@@ -1,6 +1,22 @@
 spring:
   application:
-    name: core
+    name: api
   redis:
     host: localhost
     password: sc_admin
+server:
+  port: 8080
+zuul:
+  routes:
+    baidu:
+      path: /it/**
+      url: http://www.ityouknow.com/
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8000/eureka/
+#  ssl:
+#    key-store: classpath:keystore.p12
+#    key-store-password: hgxljl
+#    key-store-type: PKCS12
+#    key-alias: tomcat

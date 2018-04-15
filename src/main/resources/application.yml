@@ -6,11 +6,6 @@ spring:
     password: sc_admin
 server:
   port: 8080
-zuul:
-  routes:
-    baidu:
-      path: /it/**
-      url: http://www.ityouknow.com/
 eureka:
   client:
     service-url:

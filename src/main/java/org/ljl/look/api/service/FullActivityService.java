@@ -21,7 +21,7 @@ public class FullActivityService {
     @Autowired
     private UserServiceFeign userServiceFeign;
 
-    public List<FullActivity> getFullActivityByTag(String tag) {
+    public List<FullActivity> getsFullActivityByTag(String tag) {
         List<Activity> activities = activityServiceFeign.getActivitiesByTag(tag);
         return activities.stream().map(activity -> {
             /** 数据组合 */
@@ -40,7 +40,10 @@ public class FullActivityService {
             // 获取所属主题
             Topic topic = activityServiceFeign.getTopic(activity.getTopicUuid());
             fullActivity.setTopicName(topic.getName());
-
+            // 获取参与人数
+            fullActivity.setJoinedPeopleCount(
+                    userServiceFeign.countJoinByActivityUuid(activity.getUuid())
+            );
             return fullActivity;
         }).collect(Collectors.toList());
     }

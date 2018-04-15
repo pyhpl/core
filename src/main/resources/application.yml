@@ -10,6 +10,14 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8000/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+feign:
+  hystrix:
+    enable: true
+ribbon:
+  read-timeout: 60000
+  connect-timeout: 60000
 #  ssl:
 #    key-store: classpath:keystore.p12
 #    key-store-password: hgxljl

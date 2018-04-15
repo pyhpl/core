@@ -15,9 +15,9 @@ public class FullActivityController {
     @Autowired
     private FullActivityService fullActivityService;
 
-    @GetMapping("")
+    @GetMapping("s")
     @ResponseStatus(HttpStatus.OK)
     public List<FullActivity> getsByTag(@RequestParam("tag") String tag) {
-        return fullActivityService.getFullActivityByTag(tag);
+        return fullActivityService.getsFullActivityByTag(tag);
     }
 }

@@ -14,10 +14,11 @@ import java.util.List;
 @AllArgsConstructor
 public class FullDiscussion {
     private String uuid;
+    private String fromUser;
     private String fromUserName;
     private String fromUserAvatar;
     private String contents;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone="GMT+8")  //取日期时使用
+    @JsonFormat(pattern = "yyyy/MM/dd",timezone="GMT+8")  //取日期时使用
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")//存日期时使用
     private Date discussDate;
     // 下一版本使用
@@ -26,15 +27,4 @@ public class FullDiscussion {
 
     // 下属讨论
     List<FullSubDiscussion> fullSubDiscussions;
-
-    @Getter
-    @Setter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public class FullSubDiscussion {
-        private String fromUser;
-        private String toUser;
-        private String contents;
-    }
 }

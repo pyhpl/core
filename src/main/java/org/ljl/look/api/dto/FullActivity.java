@@ -25,9 +25,14 @@ public class FullActivity {
     private int limitUserCount;
     private short contactType;
     private String contactRepresent;
-    private int likeCount; // 点赞数
     @JsonFormat(pattern = "yyyy/MM/dd", timezone="GMT+8")  //取日期时使用
     private Date publishDate;
+
+    // 点赞数
+    private int likeCount;
+
+    // 评论数
+    private int discussionCount;
 
     // 所属主题
     private String topicUuid;

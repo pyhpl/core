@@ -1,6 +1,8 @@
 package org.ljl.look.api.service;
 
+import org.ljl.look.api.configuration.ConstConfig;
 import org.ljl.look.api.dto.FullDiscussion;
+import org.ljl.look.api.dto.FullSubDiscussion;
 import org.ljl.look.api.entity.Discussion;
 import org.ljl.look.api.entity.User;
 import org.ljl.look.api.feign.UserServiceFeign;
@@ -21,7 +23,7 @@ public class FullDiscussionService {
     public List<FullDiscussion> getsByBelongToActivity(String belongToActivity) {
         List<Discussion> discussions = userServiceFeign.getsByBelongToActivity(belongToActivity);
         return discussions.stream()
-                .filter(discussion -> discussion.getBelongToDiscussion() == null) // 获取所有parent discussion
+                .filter(discussion -> discussion.getBelongToDiscussion().equals(ConstConfig.SINGLE_DISCUSSION)) // 获取所有parent discussion
                 // sorted by parent discussion publish date
                 .sorted(Comparator.comparing(Discussion::getDiscussDate).reversed())
                 .map(discussion -> {
@@ -41,11 +43,12 @@ public class FullDiscussionService {
                                     // sorted by child discussion publish date
                                     .sorted(Comparator.comparing(Discussion::getDiscussDate).reversed())
                                     .map(subDiscussion ->
-                                            FullDiscussion.FullSubDiscussion.builder()
-                                                    .fromUser(subDiscussion.getFromUser())
-                                                    .toUser(subDiscussion.getToUser())
-                                                    .contents(subDiscussion.getContents())
-                                                    .build()
+                                        FullSubDiscussion.builder()
+                                                .fromUser(subDiscussion.getFromUser())
+                                                .fromUserName(userServiceFeign.getUser(subDiscussion.getFromUser()).getName())
+                                                .toUserName(userServiceFeign.getUser(subDiscussion.getToUser()).getName())
+                                                .contents(subDiscussion.getContents())
+                                                .build()
                                     )
                                     .collect(Collectors.toList())
                     );

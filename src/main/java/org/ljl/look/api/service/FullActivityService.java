@@ -40,6 +40,14 @@ public class FullActivityService {
             // 获取所属主题
             Topic topic = activityServiceFeign.getTopic(activity.getTopicUuid());
             fullActivity.setTopicName(topic.getName());
+            // 获取评论数
+            fullActivity.setDiscussionCount(
+                    userServiceFeign.countDiscussionByBelongToActivity(activity.getUuid())
+            );
+            // 获取点赞数
+            fullActivity.setLikeCount(
+                    userServiceFeign.countActivityLikeByActivityUuid(activity.getUuid())
+            );
             // 获取参与人数
             fullActivity.setJoinedPeopleCount(
                     userServiceFeign.countJoinByActivityUuid(activity.getUuid())

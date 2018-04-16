@@ -5,9 +5,7 @@ import org.ljl.look.api.entity.User;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,6 +25,12 @@ public interface UserServiceFeign {
     @GetMapping("/api/discussion/s")
     List<Discussion> getsByBelongToActivity(@RequestParam("belongToActivity") String belongToActivity);
 
+    @GetMapping("/api/discussion/count")
+    int countDiscussionByBelongToActivity(@RequestParam("belongToActivity") String belongToActivity);
+
+    // ********************** /api/activity-like ******************** //
+    @GetMapping("/api/activity-like/count")
+    int countActivityLikeByActivityUuid(@RequestParam("activityUuid") String activityUuid);
 }
 
 

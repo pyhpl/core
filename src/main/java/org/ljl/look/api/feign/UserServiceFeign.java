@@ -1,9 +1,9 @@
 package org.ljl.look.api.feign;
 
 import org.ljl.look.api.entity.Discussion;
+import org.ljl.look.api.entity.TopicFocus;
 import org.ljl.look.api.entity.User;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +31,10 @@ public interface UserServiceFeign {
     // ********************** /api/activity-like ******************** //
     @GetMapping("/api/activity-like/count")
     int countActivityLikeByActivityUuid(@RequestParam("activityUuid") String activityUuid);
+
+    // ********************** /api/topic-focus ******************** //
+    @RequestMapping("/api/topic-focus/s")
+    List<TopicFocus> getTopicFocuses(@RequestParam("focused") boolean focused, @RequestBody List<TopicFocus> topicFocuses);
 }
 
 

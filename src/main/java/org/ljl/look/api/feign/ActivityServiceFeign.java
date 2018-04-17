@@ -22,6 +22,9 @@ public interface ActivityServiceFeign {
     @GetMapping("/api/topic")
     Topic getTopic(@RequestParam("uuid") String uuid);
 
+    @GetMapping("/api/topic/s")
+    List<Topic> getsTopic(@RequestParam("parentTopicUuid") String parentTopicUuid, @RequestParam("pageInfoJsonStr") String pageInfoJsonStr);
+
     // ************************ /api/activity-image ************************ //
     @GetMapping("/api/activity-image")
     List<ActivityImage> getActivityImagesByActivityUuid(@RequestParam("activityUuid") String activityUuid);

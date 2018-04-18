@@ -1,10 +1,8 @@
 package org.ljl.look.api.service;
 
+import org.ljl.look.api.configuration.ConstConfig;
 import org.ljl.look.api.dto.FullActivity;
-import org.ljl.look.api.entity.Activity;
-import org.ljl.look.api.entity.ActivityImage;
-import org.ljl.look.api.entity.Topic;
-import org.ljl.look.api.entity.User;
+import org.ljl.look.api.entity.*;
 import org.ljl.look.api.feign.ActivityServiceFeign;
 import org.ljl.look.api.feign.UserServiceFeign;
 import org.ljl.look.api.util.ReflectTool;
@@ -21,8 +19,49 @@ public class FullActivityService {
     @Autowired
     private UserServiceFeign userServiceFeign;
 
+    /** 根据标签获取活动详情 */
     public List<FullActivity> getsFullActivityByTag(String tag) {
-        List<Activity> activities = activityServiceFeign.getActivitiesByTag(tag);
+        return mapToFullActivity(activityServiceFeign.getActivitiesByTag(tag));
+    }
+
+    /** 根据标签获取活动详情 */
+    public List<FullActivity> getsUserFullActivityByFeature(String token, String feature, String pageInfoJsonStr) {
+        if (feature.equals(ConstConfig.JOIN_FEATURE)) {
+            List<Join> joins = userServiceFeign.getsJoinByFromUser(token, pageInfoJsonStr);
+            if (joins == null) {
+                return null;
+            }
+            return mapToFullActivity(
+                    activityServiceFeign.getActivities(
+                            joins.stream()
+                                    .map(Join::getActivityUuid)
+                                    .reduce((e1, e2) -> e1 + "," + e2)
+                                    .get()
+                    )
+            );
+        } else if (feature.equals(ConstConfig.FOCUS_FEATURE)) {
+            List<ActivityFocus> activityFocusList = userServiceFeign.getsActivityFocusByFromUser(token, pageInfoJsonStr);
+            if (activityFocusList == null) { // 没有关注的活动，直接返回
+                return null;
+            }
+            return mapToFullActivity(
+                    activityServiceFeign.getActivities(
+                            activityFocusList.stream()
+                                    .map(ActivityFocus::getActivityUuid)
+                                    .reduce((e1, e2) -> e1 + "," + e2)
+                                    .get()
+                    )
+            );
+        } else if (feature.equals(ConstConfig.PUBLISH_FEATURE)) {
+            return mapToFullActivity(
+                    activityServiceFeign.getActivitiesByFromUser(token, pageInfoJsonStr)
+            );
+        } else {
+            return null;
+        }
+    }
+
+    private List<FullActivity> mapToFullActivity(List<Activity> activities) {
         return activities.stream().map(activity -> {
             /** 数据组合 */
             FullActivity fullActivity = new FullActivity();

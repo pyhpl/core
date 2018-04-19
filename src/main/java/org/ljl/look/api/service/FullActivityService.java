@@ -20,8 +20,8 @@ public class FullActivityService {
     private UserServiceFeign userServiceFeign;
 
     /** 根据标签获取活动详情 */
-    public List<FullActivity> getsFullActivityByTag(String tag) {
-        return mapToFullActivity(activityServiceFeign.getActivitiesByTag(tag));
+    public List<FullActivity> getsFullActivityByKey(String key, String pageInfoJsonStr) {
+        return mapToFullActivity(activityServiceFeign.getActivitiesByKey(key, pageInfoJsonStr));
     }
 
     /** 根据标签获取活动详情 */
@@ -32,7 +32,7 @@ public class FullActivityService {
                 return null;
             }
             return mapToFullActivity(
-                    activityServiceFeign.getActivities(
+                    activityServiceFeign.getActivitiesByUuidList(
                             joins.stream()
                                     .map(Join::getActivityUuid)
                                     .reduce((e1, e2) -> e1 + "," + e2)
@@ -45,7 +45,7 @@ public class FullActivityService {
                 return null;
             }
             return mapToFullActivity(
-                    activityServiceFeign.getActivities(
+                    activityServiceFeign.getActivitiesByUuidList(
                             activityFocusList.stream()
                                     .map(ActivityFocus::getActivityUuid)
                                     .reduce((e1, e2) -> e1 + "," + e2)
@@ -54,7 +54,7 @@ public class FullActivityService {
             );
         } else if (feature.equals(ConstConfig.PUBLISH_FEATURE)) {
             return mapToFullActivity(
-                    activityServiceFeign.getActivitiesByFromUser(token, pageInfoJsonStr)
+                    activityServiceFeign.getActivitiesByPublishUser(token, pageInfoJsonStr)
             );
         } else {
             return null;

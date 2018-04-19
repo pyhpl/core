@@ -16,14 +16,17 @@ import java.util.List;
 @FeignClient("activity")
 public interface ActivityServiceFeign {
     // ************************ /api/activity ************************ //
-    @GetMapping("/api/activity")
-    List<Activity> getActivitiesByTag(@RequestParam("tag") String tag);
+//    @GetMapping("/api/activity")
+//    List<Activity> getActivitiesByTag(@RequestParam("tag") String tag);
 
     @GetMapping("/api/activity/s")
-    List<Activity> getActivities(@RequestParam("uuidList") String uuidList);
+    List<Activity> getActivitiesByUuidList(@RequestParam("uuidList") String uuidList);
+
+    @GetMapping("/api/activity/s")
+    List<Activity> getActivitiesByKey(@RequestParam("key") String key, @RequestParam("pageInfoJsonStr") String pageInfoJsonStr);
 
     @GetMapping("/api/user/activity/s")
-    List<Activity> getActivitiesByFromUser(@RequestHeader("token") String token, @RequestParam("pageInfoJsonStr") String pageInfoJsonStr);
+    List<Activity> getActivitiesByPublishUser(@RequestHeader("token") String token, @RequestParam("pageInfoJsonStr") String pageInfoJsonStr);
 
     // ************************ /api/topic ************************ //
     @GetMapping("/api/topic")
@@ -36,8 +39,10 @@ public interface ActivityServiceFeign {
     List<Topic> getsTopicByUuidList(@RequestParam("uuidList") String uuidList);
 
     @GetMapping("/api/user/topic/s")
-    List<Topic> getsTopicByFromUser(@RequestHeader("token") String token, @RequestParam("pageInfoJsonStr") String pageInfoJsonStr);
+    List<Topic> getsTopicByCreateUser(@RequestHeader("token") String token, @RequestParam("pageInfoJsonStr") String pageInfoJsonStr);
 
+    @GetMapping("/api/topic/s")
+    List<Topic> getsTopicByKey(@RequestParam("key") String key, @RequestParam("pageInfoJsonStr") String pageInfoJsonStr);
     // ************************ /api/activity-image ************************ //
     @GetMapping("/api/activity-image")
     List<ActivityImage> getActivityImagesByActivityUuid(@RequestParam("activityUuid") String activityUuid);

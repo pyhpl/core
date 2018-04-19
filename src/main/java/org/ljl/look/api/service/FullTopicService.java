@@ -21,23 +21,22 @@ public class FullTopicService {
     private ActivityServiceFeign activityServiceFeign;
     @Autowired
     private UserServiceFeign userServiceFeign;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
-    public List<FullTopic> get(String fromUser, String parentTopicUuid, String pageInfoJsonStr) {
+    public List<FullTopic> getByParentTopic(String token, String parentTopicUuid, String pageInfoJsonStr) {
         List<Topic> topics = activityServiceFeign.getsTopicByParentTopicUuid(parentTopicUuid, pageInfoJsonStr);
-        // 如果用户未登录，则直接返回
-        if (fromUser == null) {
-            return mapToFullTopic(topics, null);
-        }
-        return mapToFullTopic(
-                topics,
-                userServiceFeign.getTopicFocuses(
-                        true,
-                        topics.stream()
-                                .map(topic ->
-                                        TopicFocus.builder().fromUser(fromUser).topicUuid(topic.getUuid()).build()
-                                )
-                                .collect(Collectors.toList())
-                )
+        return mapToFullTopicAndMarkUserFocus(
+                stringRedisTemplate.opsForValue().get(token),
+                topics
+        );
+    }
+
+    public List<FullTopic> getByKey(String token, String key, String pageInfoJsonStr) {
+        List<Topic> topics = activityServiceFeign.getsTopicByKey(key, pageInfoJsonStr);
+        return mapToFullTopicAndMarkUserFocus(
+                stringRedisTemplate.opsForValue().get(token),
+                topics
         );
     }
 
@@ -54,10 +53,41 @@ public class FullTopicService {
                     topicFocusList
             );
         } else if (feature.equals(ConstConfig.PUBLISH_FEATURE)) {
-            return mapToFullTopic(activityServiceFeign.getsTopicByFromUser(token, pageInfoJsonStr), null);
+            List<Topic> topics = activityServiceFeign.getsTopicByCreateUser(token, pageInfoJsonStr);
+            return mapToFullTopic(
+                    topics,
+                    userServiceFeign.getTopicFocuses(
+                            true,
+                            topics.stream()
+                                    .map(topic ->
+                                            TopicFocus.builder().fromUser(
+                                                    stringRedisTemplate.opsForValue().get(token)
+                                            ).topicUuid(topic.getUuid()).build()
+                                    )
+                                    .collect(Collectors.toList())
+                    )
+            );
         } else {
             return null;
         }
+    }
+
+    private List<FullTopic> mapToFullTopicAndMarkUserFocus(String user, List<Topic> topics) {
+        // 如果用户未登录，则直接返回
+        if (user == null) {
+            return mapToFullTopic(topics, null);
+        }
+        return mapToFullTopic(
+                topics,
+                userServiceFeign.getTopicFocuses(
+                        true,
+                        topics.stream()
+                                .map(topic ->
+                                        TopicFocus.builder().fromUser(user).topicUuid(topic.getUuid()).build()
+                                )
+                                .collect(Collectors.toList())
+                )
+        );
     }
 
     private List<FullTopic> mapToFullTopic(List<Topic> topics, List<TopicFocus> topicFocuses) {

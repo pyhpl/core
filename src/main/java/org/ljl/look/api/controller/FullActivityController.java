@@ -17,8 +17,9 @@ public class FullActivityController {
 
     @GetMapping("/api/full-activity/s")
     @ResponseStatus(HttpStatus.OK)
-    public List<FullActivity> getsByTag(@RequestParam("tag") String tag) {
-        return fullActivityService.getsFullActivityByTag(tag);
+    public List<FullActivity> getsByKey(@RequestParam("key") String key,
+                                        @RequestParam String pageInfoJsonStr) {
+        return fullActivityService.getsFullActivityByKey(key, pageInfoJsonStr);
     }
 
     @GetMapping("/api/user/full-activity/s")

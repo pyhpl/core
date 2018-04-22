@@ -15,9 +15,11 @@ import java.util.List;
 @Repository
 @FeignClient("activity")
 public interface ActivityServiceFeign {
+
     // ************************ /api/activity ************************ //
-//    @GetMapping("/api/activity")
-//    List<Activity> getActivitiesByTag(@RequestParam("tag") String tag);
+
+    @GetMapping("/api/activity")
+    Activity getActivity(@RequestParam("uuid") String uuid);
 
     @GetMapping("/api/activity/s")
     List<Activity> getActivitiesByUuidList(@RequestParam("uuidList") String uuidList);
@@ -29,6 +31,7 @@ public interface ActivityServiceFeign {
     List<Activity> getActivitiesByPublishUser(@RequestHeader("token") String token, @RequestParam("pageInfoJsonStr") String pageInfoJsonStr);
 
     // ************************ /api/topic ************************ //
+
     @GetMapping("/api/topic")
     Topic getTopic(@RequestParam("uuid") String uuid);
 
@@ -43,7 +46,9 @@ public interface ActivityServiceFeign {
 
     @GetMapping("/api/topic/s")
     List<Topic> getsTopicByKey(@RequestParam("key") String key, @RequestParam("pageInfoJsonStr") String pageInfoJsonStr);
+
     // ************************ /api/activity-image ************************ //
+
     @GetMapping("/api/activity-image")
     List<ActivityImage> getActivityImagesByActivityUuid(@RequestParam("activityUuid") String activityUuid);
 }

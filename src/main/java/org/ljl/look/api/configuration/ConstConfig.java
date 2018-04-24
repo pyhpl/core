@@ -27,4 +27,8 @@ public class ConstConfig {
     public static final String QUEUE_TOPIC_AUDIT = "queueTopicAudit";
     public static final String QUEUE_ACTIVITY_AUDIT = "queueActivityAudit";
     public static final String QUEUE_TOPIC_FOCUS = "queueTopicFocus";
+    public static final String QUEUE_MESSAGE = "queueMessage";
+
+    /** message type */
+    public static final short AUDIT_MESSAGE = (short) 1;
 }

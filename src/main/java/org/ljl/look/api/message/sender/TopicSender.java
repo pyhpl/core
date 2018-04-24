@@ -2,7 +2,7 @@ package org.ljl.look.api.message.sender;
 
 import org.ljl.look.api.configuration.ConstConfig;
 import org.ljl.look.api.entity.Topic;
-import org.ljl.look.api.message.wrapper.Message;
+import org.ljl.look.api.message.wrapper.MessageWrapper;
 import org.ljl.look.api.util.JsonTool;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class TopicSender {
         rabbitTemplate.convertAndSend(
                 ConstConfig.QUEUE_TOPIC,
                 JsonTool.toJson(
-                        Message.builder().method(Message.MessageMethod.PUT).body(topic).build()
+                        MessageWrapper.builder().method(MessageWrapper.MessageMethod.PUT).body(topic).build()
                 )
         );
     }

@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Message<T> {
+public class MessageWrapper<T> {
 
     private MessageMethod method;
     private T body;

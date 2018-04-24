@@ -2,12 +2,14 @@ package org.ljl.look.api.service;
 
 import org.ljl.look.api.configuration.ConstConfig;
 import org.ljl.look.api.dto.TopicWithAudit;
+import org.ljl.look.api.entity.Message;
 import org.ljl.look.api.entity.Topic;
 import org.ljl.look.api.entity.TopicAudit;
 import org.ljl.look.api.entity.TopicFocus;
 import org.ljl.look.api.feign.ActivityServiceFeign;
 import org.ljl.look.api.feign.AuditServiceFeign;
 import org.ljl.look.api.feign.UserServiceFeign;
+import org.ljl.look.api.message.sender.MessageSender;
 import org.ljl.look.api.message.sender.TopicAuditSender;
 import org.ljl.look.api.message.sender.TopicFocusSender;
 import org.ljl.look.api.message.sender.TopicSender;
@@ -36,6 +38,8 @@ public class TopicWithAuditService {
     private TopicAuditSender topicAuditSender;
     @Autowired
     private TopicFocusSender topicFocusSender;
+    @Autowired
+    private MessageSender messageSender;
 
     public TopicWithAudit get(String uuid) {
         TopicWithAudit topicWithAudit = new TopicWithAudit();
@@ -84,11 +88,26 @@ public class TopicWithAuditService {
             // 用户关注 topic
             topicFocusSender.sendToAdd(
                     TopicFocus.builder()
-                            .fromUser(
-                                    activityServiceFeign.getTopic(topicWithAudit.getTopicUuid()).getCreateUser()
-                            )
+                            .fromUser(activityServiceFeign.getTopic(topicWithAudit.getTopicUuid()).getCreateUser())
                             .topicUuid(topicWithAudit.getTopicUuid())
                             .build()
+            );
+            // 给用户发送主题审核通过消息
+            messageSender.sendToAdd(
+                    Message.builder()
+                            .toUser(token)
+                            .title("审核通过：主题-" + topicWithAudit.getName())
+                            .content(topicWithAudit.getTopicUuid())
+                            .type(ConstConfig.AUDIT_MESSAGE).build()
+            );
+        } else { // 审核未通过
+            // 给用户发送主题审核未通过消息
+            messageSender.sendToAdd(
+                    Message.builder()
+                            .toUser(token)
+                            .title("审核未通过：主题-" + topicWithAudit.getName())
+                            .content(topicWithAudit.getTopicUuid())
+                            .type(ConstConfig.AUDIT_MESSAGE).build()
             );
         }
     }

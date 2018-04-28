@@ -8,7 +8,6 @@ import org.ljl.look.api.entity.TopicAudit;
 import org.ljl.look.api.entity.TopicFocus;
 import org.ljl.look.api.feign.ActivityServiceFeign;
 import org.ljl.look.api.feign.AuditServiceFeign;
-import org.ljl.look.api.feign.UserServiceFeign;
 import org.ljl.look.api.message.sender.MessageSender;
 import org.ljl.look.api.message.sender.TopicAuditSender;
 import org.ljl.look.api.message.sender.TopicFocusSender;

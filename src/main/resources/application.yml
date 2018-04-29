@@ -16,20 +16,23 @@ eureka:
       defaultZone: http://localhost:8000/eureka/
     register-with-eureka: true
     fetch-registry: true
-zuul:
-  ribbon:
-    eager-load:
-      enabled: true
-ribbon:
-  eager-load:
-    enabled: true
-    clients: user, activity, cloud, audit, message
-hystrix:
-  command:
-    default:
-      execution:
-        timeout:
-          enabled: false
+#zuul:
+#  ribbon:
+#    eager-load:
+#      enabled: true
+#ribbon:
+#  eager-load:
+#    enabled: true
+#    clients: user, activity, audit, message
+#hystrix:
+#  command:
+#    default:
+#      execution:
+#        timeout:
+#          enabled: false
+#        isolation:
+#          thread:
+#            timeoutInMilliseconds: 5000
 #  ssl:
 #    key-store: classpath:keystore.p12
 #    key-store-password: hgxljl

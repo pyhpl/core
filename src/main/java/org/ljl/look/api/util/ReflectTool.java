@@ -33,6 +33,9 @@ public class ReflectTool {
 	 * 复制相同属性的值
 	 */
 	public static void copyCommonPropertyValue(Object destination, Object source) {
+		if (source == null) {
+			return;
+		}
 		Arrays.stream(getAllField(source))
 				.filter(sourceField ->
 					Arrays.stream(getAllField(destination)).anyMatch(destinationField ->

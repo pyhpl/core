@@ -78,6 +78,9 @@ public class FullActivityService {
         FullActivity fullActivity = new FullActivity();
         // 共同属性赋值
         ReflectTool.copyCommonPropertyValue(fullActivity, activity);
+        fullActivity.setDetail(
+                fullActivity.getDetail().replace("\n", "<br />")
+        );
         // 获取活动图片
         List<ActivityImage> activityImages = activityServiceFeign.getActivityImagesByActivityUuid(activity.getUuid());
         fullActivity.setActivityImageUrls(

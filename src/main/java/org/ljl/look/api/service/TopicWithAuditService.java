@@ -65,6 +65,7 @@ public class TopicWithAuditService {
     }
 
     public void update(String token, TopicWithAudit topicWithAudit) {
+        Topic topic = activityServiceFeign.getTopic(topicWithAudit.getTopicUuid());
         // 更新 TopicAudit
         topicAuditSender.sendToUpdate(
                 TopicAudit.builder()
@@ -79,24 +80,24 @@ public class TopicWithAuditService {
             // 更新 Topic
             topicSender.sendToUpdate(
                     Topic.builder()
-                            .uuid(topicWithAudit.getTopicUuid())
-                            .parentTopicUuid(topicWithAudit.getParentTopicUuid())
+                            .uuid(topic.getUuid())
+                            .parentTopicUuid(topic.getParentTopicUuid())
                             .valid(ConstConfig.VALID)
                             .build()
             );
             // 用户关注 topic
             topicFocusSender.sendToAdd(
                     TopicFocus.builder()
-                            .fromUser(activityServiceFeign.getTopic(topicWithAudit.getTopicUuid()).getCreateUser())
-                            .topicUuid(topicWithAudit.getTopicUuid())
+                            .fromUser(topic.getCreateUser())
+                            .topicUuid(topic.getUuid())
                             .build()
             );
             // 给用户发送主题审核通过消息
             messageSender.sendToAdd(
                     Message.builder()
                             .toUser(token)
-                            .title("审核通过：主题-" + topicWithAudit.getName())
-                            .content(topicWithAudit.getTopicUuid())
+                            .title("通过：" + topic.getName() + "(主题)")
+                            .content(topic.getUuid())
                             .type(ConstConfig.AUDIT_MESSAGE).build()
             );
         } else { // 审核未通过
@@ -104,8 +105,8 @@ public class TopicWithAuditService {
             messageSender.sendToAdd(
                     Message.builder()
                             .toUser(token)
-                            .title("审核未通过：主题-" + topicWithAudit.getName())
-                            .content(topicWithAudit.getTopicUuid())
+                            .title("未通过：" + topic.getName() + "(主题)")
+                            .content(topic.getUuid())
                             .type(ConstConfig.AUDIT_MESSAGE).build()
             );
         }

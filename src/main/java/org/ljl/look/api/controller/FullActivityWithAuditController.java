@@ -6,17 +6,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/activity-with-audit")
 public class FullActivityWithAuditController {
 
     @Autowired
     private ActivityWithAuditService activityWithAuditService;
 
-    @GetMapping("")
+    @GetMapping("/api/activity-with-audit")
     @ResponseStatus(HttpStatus.OK)
     public FullActivityWithAudit get(@RequestParam("uuid") String uuid) {
         return activityWithAuditService.get(uuid);
+    }
+
+    @GetMapping("/api/user/activity-with-audit/s")
+    @ResponseStatus(HttpStatus.OK)
+    public List<FullActivityWithAudit> get(@RequestHeader("token") String token,
+                                           @RequestParam("state") String state,
+                                           @RequestParam("pageInfoJsonStr") String pageInfoJsonStr) {
+        return activityWithAuditService.getsByState(token, state, pageInfoJsonStr);
+    }
+
+    @PutMapping("/api/user/activity-with-audit")
+    @ResponseStatus(HttpStatus.OK)
+    public void put(@RequestHeader("token") String token, @RequestBody FullActivityWithAudit fullActivityWithAudit) {
+        activityWithAuditService.update(token, fullActivityWithAudit);
     }
 
 }

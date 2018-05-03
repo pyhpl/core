@@ -1,5 +1,6 @@
 package org.ljl.look.api.feign;
 
+import org.ljl.look.api.entity.ActivityAudit;
 import org.ljl.look.api.entity.TopicAudit;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Repository;
@@ -24,6 +25,8 @@ public interface AuditServiceFeign {
     // ************************ /api/activity-audit ************************ //
 
     @GetMapping("/api/activity-audit")
-    TopicAudit getActivityAuditByActivityUuid(@RequestParam("activityUuid") String activityUuid);
+    ActivityAudit getActivityAuditByActivityUuid(@RequestParam("activityUuid") String activityUuid);
 
+    @GetMapping("/api/user/activity-audit/s")
+    List<ActivityAudit> getsActivityAuditUserAudited(@RequestHeader("token") String token, @RequestParam("pageInfoJsonStr") String pageInfoJsonStr);
 }

@@ -15,6 +15,12 @@ public class FullActivityController {
     @Autowired
     private FullActivityService fullActivityService;
 
+    @GetMapping("/api/full-activity")
+    @ResponseStatus(HttpStatus.OK)
+    public FullActivity get(@RequestParam("uuid") String uuid) {
+        return fullActivityService.getByUuid(uuid);
+    }
+
     @GetMapping("/api/full-activity/s")
     @ResponseStatus(HttpStatus.OK)
     public List<FullActivity> getsByKey(@RequestParam("key") String key,

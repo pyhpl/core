@@ -27,4 +27,14 @@ public class RabbitMqConfig {
         return new Queue(ConstConfig.QUEUE_MESSAGE);
     }
 
+    @Bean
+    Queue activityQueue() {
+        return new Queue(ConstConfig.QUEUE_ACTIVITY);
+    }
+
+    @Bean
+    Queue joinQueue() {
+        return new Queue(ConstConfig.QUEUE_JOIN);
+    }
+
 }
